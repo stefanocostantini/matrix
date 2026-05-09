@@ -9,38 +9,47 @@
 <body>
     <div class="app-container">
         <header>
-            <h1>Eisenhower Matrix</h1>
+            <div class="header-main">
+                <h1>Eisenhower Matrix</h1>
+                <div id="sync-status" class="connecting">OFFLINE</div>
+            </div>
             <form id="add-task-form">
-                <input type="text" id="task-title" placeholder="New task..." required>
+                <input type="text" id="task-title" placeholder="ENTER NEW TASK..." required>
                 <select id="task-quadrant">
-                    <option value="urgent_important">Urgent & Important</option>
-                    <option value="not_urgent_important">Important (Not Urgent)</option>
-                    <option value="urgent_not_important">Urgent (Not Important)</option>
-                    <option value="not_urgent_not_important" selected>Neither</option>
+                    <option value="urgent_important">URGENT & IMPORTANT</option>
+                    <option value="not_urgent_important">IMPORTANT (NOT URGENT)</option>
+                    <option value="urgent_not_important">URGENT (NOT IMPORTANT)</option>
+                    <option value="not_urgent_not_important" selected>NEITHER</option>
                 </select>
-                <button type="submit">Add Task</button>
+                <button type="submit">ADD TASK</button>
             </form>
         </header>
 
-        <main class="matrix-grid">
-            <div class="quadrant urgent-important" data-id="urgent_important">
-                <h2>Urgent & Important</h2>
-                <div class="task-list"></div>
-            </div>
-            <div class="quadrant not-urgent-important" data-id="not_urgent_important">
-                <h2>Important (Not Urgent)</h2>
-                <div class="task-list"></div>
-            </div>
-            <div class="quadrant urgent-not-important" data-id="urgent_not_important">
-                <h2>Urgent (Not Important)</h2>
-                <div class="task-list"></div>
-            </div>
-            <div class="quadrant not-urgent-not-important" data-id="not_urgent_not_important">
-                <h2>Neither</h2>
-                <div class="task-list"></div>
-            </div>
-        </main>
+        <div class="matrix-container">
+            <div class="axis-label urgent">URGENT</div>
+            <div class="axis-label important">IMPORTANT</div>
+            
+            <main class="matrix-grid">
+                <div class="quadrant urgent-important" data-id="urgent_important">
+                    <h2>DO NOW</h2>
+                    <div class="task-list"></div>
+                </div>
+                <div class="quadrant not-urgent-important" data-id="not_urgent_important">
+                    <h2>SCHEDULE</h2>
+                    <div class="task-list"></div>
+                </div>
+                <div class="quadrant urgent-not-important" data-id="urgent_not_important">
+                    <h2>DELEGATE</h2>
+                    <div class="task-list"></div>
+                </div>
+                <div class="quadrant not-urgent-not-important" data-id="not_urgent_not_important">
+                    <h2>ELIMINATE</h2>
+                    <div class="task-list"></div>
+                </div>
+            </main>
+        </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="app.js"></script>
 </body>
 </html>

@@ -1,7 +1,7 @@
 // Supabase Configuration
 const SUPABASE_URL = 'https://rndvtvtpmrjlrnuczqmz.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_o8UDAa44JkdmG0ZKZY8_PA_OPq85sui';
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // State Management
 let tasks = [];
@@ -15,13 +15,19 @@ const syncStatusEl = document.getElementById('sync-status');
 
 // Initialize
 document.addEventListener('DOMContentLoaded', async () => {
-    await fetchTasks();
-    setupDragAndDrop();
-    setupRealtimeSubscription();
+    console.log('App initializing...');
+    try {
+        await fetchTasks();
+        setupDragAndDrop();
+        setupRealtimeSubscription();
+    } catch (err) {
+        console.error('Initialization failed:', err);
+    }
 });
 
 // Fetch Tasks from Supabase
 async function fetchTasks() {
+    console.log('Fetching tasks...');
     const { data, error } = await supabase
         .from('tasks')
         .select('*')
@@ -30,6 +36,7 @@ async function fetchTasks() {
     if (error) {
         console.error('Error fetching tasks:', error);
     } else {
+        console.log('Tasks fetched:', data.length);
         tasks = data;
         renderTasks();
     }
@@ -37,6 +44,7 @@ async function fetchTasks() {
 
 // Real-time Subscription
 function setupRealtimeSubscription() {
+    console.log('Setting up realtime subscription...');
     const channel = supabase
         .channel('schema-db-changes')
         .on(
@@ -47,10 +55,13 @@ function setupRealtimeSubscription() {
                 table: 'tasks',
             },
             (payload) => {
+                console.log('Realtime update received:', payload.eventType);
                 handleRealtimeUpdate(payload);
             }
         )
-        .subscribe((status) => {
+        .subscribe((status, err) => {
+            console.log('Subscription status:', status);
+            if (err) console.error('Subscription error:', err);
             updateSyncStatus(status);
         });
 }
@@ -59,7 +70,7 @@ function updateSyncStatus(status) {
     if (status === 'SUBSCRIBED') {
         syncStatusEl.textContent = 'ONLINE';
         syncStatusEl.className = 'online';
-    } else if (status === 'CLOSED' || status === 'CHANNEL_ERROR') {
+    } else if (status === 'CLOSED' || status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
         syncStatusEl.textContent = 'OFFLINE';
         syncStatusEl.className = 'connecting';
     }
@@ -186,6 +197,7 @@ form.addEventListener('submit', async (e) => {
 
     if (error) {
         console.error('Error adding task:', error);
+        alert(`FAILED TO ADD TASK: ${error.message || 'Unknown error'}`);
     } else {
         // Local update handled by realtime handler usually, 
         // but adding here for immediate feedback if subscription is slow

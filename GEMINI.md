@@ -8,12 +8,12 @@ This file contains the foundational mandates and conventions for the Matrix proj
 - **Persistence:** Required for tasks and matrix positions.
 
 ## Tech Stack
-- **Frontend:** React (TypeScript)
+- **Frontend:** Vanilla HTML/JavaScript
 - **Styling:** Vanilla CSS
-- **Backend:** Python (FastAPI)
-- **Database:** SQLite (SQLAlchemy)
+- **Backend:** None (Serverless)
+- **Persistence:** Local Storage
 
 ## Conventions
-- Follow standard TypeScript/React and Python/FastAPI best practices.
-- Use surgical edits with the `replace` tool.
-- Ensure all changes are verified with tests.
+- Use standard HTML5/JS/CSS.
+- No external libraries or frameworks.
+- Persistence is handled via the browser's Local Storage API.

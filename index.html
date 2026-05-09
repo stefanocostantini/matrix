@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eisenhower Matrix</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1>Eisenhower Matrix</h1>
+            <form id="add-task-form">
+                <input type="text" id="task-title" placeholder="New task..." required>
+                <select id="task-quadrant">
+                    <option value="urgent_important">Urgent & Important</option>
+                    <option value="not_urgent_important">Important (Not Urgent)</option>
+                    <option value="urgent_not_important">Urgent (Not Important)</option>
+                    <option value="not_urgent_not_important" selected>Neither</option>
+                </select>
+                <button type="submit">Add Task</button>
+            </form>
+        </header>
+
+        <main class="matrix-grid">
+            <div class="quadrant urgent-important" data-id="urgent_important">
+                <h2>Urgent & Important</h2>
+                <div class="task-list"></div>
+            </div>
+            <div class="quadrant not-urgent-important" data-id="not_urgent_important">
+                <h2>Important (Not Urgent)</h2>
+                <div class="task-list"></div>
+            </div>
+            <div class="quadrant urgent-not-important" data-id="urgent_not_important">
+                <h2>Urgent (Not Important)</h2>
+                <div class="task-list"></div>
+            </div>
+            <div class="quadrant not-urgent-not-important" data-id="not_urgent_not_important">
+                <h2>Neither</h2>
+                <div class="task-list"></div>
+            </div>
+        </main>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>

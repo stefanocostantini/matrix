@@ -1,7 +1,10 @@
 // Supabase Configuration
-const SUPABASE_URL = 'https://rndvtvtpmrjlrnuczqmz.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_o8UDAa44JkdmG0ZKZY8_PA_OPq85sui';
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+if (typeof window.supabaseClient === 'undefined') {
+    var SUPABASE_URL = 'https://rndvtvtpmrjlrnuczqmz.supabase.co';
+    var SUPABASE_KEY = 'sb_publishable_o8UDAa44JkdmG0ZKZY8_PA_OPq85sui';
+    window.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+}
+var supabase = window.supabaseClient;
 
 // State Management
 let tasks = [];

@@ -35,17 +35,29 @@ A minimalist, high-contrast task manager based on the Eisenhower Matrix, designe
    - `title`: `text`
    - `quadrant`: `text`
    - `completed`: `boolean` (Default: `false`)
-3. **Enable Realtime**: Go to **Database -> Replication** in the Supabase dashboard and ensure the `realtime` publication includes the `tasks` table.
-4. **RLS (Policies)**: Ensure your table has appropriate Row Level Security policies or disable RLS for testing (Authentication -> Policies).
+3. **Configure Permissions & Realtime**: Run the following SQL in your Supabase SQL Editor to enable access and live syncing:
 
-### Configuration
+```sql
+-- Enable RLS
+ALTER TABLE tasks ENABLE ROW LEVEL SECURITY;
 
-The app is pre-configured to use the provided Supabase project URL and anon key. To use your own, update the following constants in `app.js`:
+-- Setup Policies
+CREATE POLICY "Allow public access" ON tasks FOR ALL USING (true);
 
-```javascript
-const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
+-- Enable Realtime
+ALTER PUBLICATION supabase_realtime ADD TABLE tasks;
+ALTER TABLE tasks REPLICA IDENTITY FULL;
 ```
+
+### Configuration & Local Development
+
+The app is pre-configured to use the provided Supabase project URL and anon key. To use your own, update the constants in `app.js`.
+
+**CRITICAL: You must serve the app via a local HTTP server.** Real-time features will not work if you open `index.html` directly as a file (`file://`).
+
+Run one of these in your project folder:
+- **Node.js**: `npx serve .`
+- **Python**: `python3 -m http.server 8000`
 
 ## How to Use
 

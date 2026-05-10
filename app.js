@@ -253,12 +253,3 @@ function setupDragAndDrop() {
         });
     });
 }
-          if (error) {
-                    console.error('Error updating task quadrant:', error);
-                    task.quadrant = oldQuadrantId; // Revert on error
-                    renderTasks();
-                }
-            }
-        });
-    });
-}

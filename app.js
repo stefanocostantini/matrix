@@ -110,7 +110,7 @@ function handleRealtimeUpdate(payload) {
             tasks[index] = newRecord;
         }
     } else if (eventType === 'DELETE') {
-        tasks = tasks.filter(t => t.id === oldRecord.id);
+        tasks = tasks.filter(t => t.id !== oldRecord.id);
     }
 
     renderTasks();

@@ -60,18 +60,20 @@ function setupRealtimeSubscription() {
             }
         )
         .subscribe((status, err) => {
-            console.log('Subscription status:', status);
-            if (err) console.error('Subscription error:', err);
-            updateSyncStatus(status);
+            updateSyncStatus(status, err);
         });
 }
 
-function updateSyncStatus(status) {
+function updateSyncStatus(status, err) {
+    console.log('Subscription status change:', status, err || '');
     if (status === 'SUBSCRIBED') {
         syncStatusEl.textContent = 'ONLINE';
         syncStatusEl.className = 'online';
-    } else if (status === 'CLOSED' || status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
-        syncStatusEl.textContent = 'OFFLINE';
+    } else if (err) {
+        syncStatusEl.textContent = `ERROR: ${err.message || status}`;
+        syncStatusEl.className = 'connecting';
+    } else {
+        syncStatusEl.textContent = status.toUpperCase();
         syncStatusEl.className = 'connecting';
     }
 }
@@ -243,6 +245,15 @@ function setupDragAndDrop() {
                     .eq('id', taskId);
 
                 if (error) {
+                    console.error('Error updating task quadrant:', error);
+                    task.quadrant = oldQuadrantId; // Revert on error
+                    renderTasks();
+                }
+            }
+        });
+    });
+}
+          if (error) {
                     console.error('Error updating task quadrant:', error);
                     task.quadrant = oldQuadrantId; // Revert on error
                     renderTasks();

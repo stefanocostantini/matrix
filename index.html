@@ -7,11 +7,38 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="app-container">
+    <div id="auth-container" class="auth-container">
+        <header>
+            <h1>Matrix Login</h1>
+        </header>
+        <div class="auth-forms">
+            <form id="login-form">
+                <h2>Sign In</h2>
+                <input type="email" id="login-email" placeholder="EMAIL" required>
+                <input type="password" id="login-password" placeholder="PASSWORD" required>
+                <button type="submit">LOG IN</button>
+            </form>
+            <div class="auth-divider">OR</div>
+            <form id="signup-form">
+                <h2>Create Account</h2>
+                <input type="email" id="signup-email" placeholder="EMAIL" required>
+                <input type="password" id="signup-password" placeholder="PASSWORD" required>
+                <button type="submit">SIGN UP</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="main-app" class="app-container" style="display: none;">
         <header>
             <div class="header-main">
-                <h1>Eisenhower Matrix</h1>
-                <div id="sync-status" class="connecting">OFFLINE</div>
+                <div>
+                    <h1>Eisenhower Matrix</h1>
+                    <div id="user-email" class="user-email"></div>
+                </div>
+                <div class="header-actions">
+                    <div id="sync-status" class="connecting">OFFLINE</div>
+                    <button id="logout-btn" class="logout-btn">LOGOUT</button>
+                </div>
             </div>
             <form id="add-task-form">
                 <input type="text" id="task-title" placeholder="ENTER NEW TASK..." required>

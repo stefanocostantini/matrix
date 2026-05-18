@@ -8,8 +8,17 @@ var supabase = window.supabaseClient;
 
 // State Management
 let tasks = [];
+let currentUser = null;
+let realtimeChannel = null;
 
 // DOM Elements
+const authContainer = document.getElementById('auth-container');
+const mainApp = document.getElementById('main-app');
+const loginForm = document.getElementById('login-form');
+const signupForm = document.getElementById('signup-form');
+const logoutBtn = document.getElementById('logout-btn');
+const userEmailEl = document.getElementById('user-email');
+
 const form = document.getElementById('add-task-form');
 const taskTitleInput = document.getElementById('task-title');
 const taskQuadrantSelect = document.getElementById('task-quadrant');
@@ -19,6 +28,25 @@ const syncStatusEl = document.getElementById('sync-status');
 // Initialize
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('App initializing...');
+    
+    // Listen for Auth Changes
+    supabase.auth.onAuthStateChange((event, session) => {
+        console.log('Auth event:', event);
+        if (session) {
+            currentUser = session.user;
+            showApp();
+        } else {
+            currentUser = null;
+            showAuth();
+        }
+    });
+});
+
+async function showApp() {
+    authContainer.style.display = 'none';
+    mainApp.style.display = 'flex';
+    userEmailEl.textContent = currentUser.email;
+    
     try {
         await fetchTasks();
         setupDragAndDrop();
@@ -26,6 +54,47 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch (err) {
         console.error('Initialization failed:', err);
     }
+}
+
+function showAuth() {
+    authContainer.style.display = 'block';
+    mainApp.style.display = 'none';
+    tasks = [];
+    renderTasks();
+    if (realtimeChannel) {
+        realtimeChannel.unsubscribe();
+        realtimeChannel = null;
+    }
+}
+
+// Auth Handlers
+loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+    
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) {
+        alert(`LOGIN FAILED: ${error.message}`);
+    }
+});
+
+signupForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('signup-email').value;
+    const password = document.getElementById('signup-password').value;
+    
+    const { error } = await supabase.auth.signUp({ email, password });
+    if (error) {
+        alert(`SIGNUP FAILED: ${error.message}`);
+    } else {
+        alert('SIGNUP SUCCESSFUL! Please check your email for confirmation (if enabled) or try logging in.');
+    }
+});
+
+logoutBtn.addEventListener('click', async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) console.error('Error logging out:', error);
 });
 
 // Fetch Tasks from Supabase
@@ -47,8 +116,10 @@ async function fetchTasks() {
 
 // Real-time Subscription
 function setupRealtimeSubscription() {
+    if (realtimeChannel) return; // Already subscribed
+
     console.log('Setting up realtime subscription...');
-    const channel = supabase
+    realtimeChannel = supabase
         .channel('schema-db-changes')
         .on(
             'postgres_changes',

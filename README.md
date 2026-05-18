@@ -32,19 +32,49 @@ A minimalist, high-contrast task manager based on the Eisenhower Matrix, designe
 1. Create a table named `tasks` in your Supabase project.
 2. Add the following columns:
    - `id`: `int8` (Primary Key, Identity)
+   - `created_at`: `timestamptz` (Default: `now()`)
    - `title`: `text`
    - `quadrant`: `text`
    - `completed`: `boolean` (Default: `false`)
+   - `user_id`: `uuid` (References `auth.users.id`, Default: `auth.uid()`)
+
 3. **Configure Permissions & Realtime**: Run the following SQL in your Supabase SQL Editor to enable access and live syncing:
 
 ```sql
--- Enable RLS
+-- 1. Enable RLS
 ALTER TABLE tasks ENABLE ROW LEVEL SECURITY;
 
--- Setup Policies
-CREATE POLICY "Allow public access" ON tasks FOR ALL USING (true);
+-- 2. Add user_id column (if you haven't already via UI)
+-- ALTER TABLE public.tasks ADD COLUMN user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL DEFAULT auth.uid();
 
--- Enable Realtime
+-- 3. Setup Policies for Authenticated Users
+-- Users can only read their own tasks
+CREATE POLICY "Users can view their own tasks" 
+ON tasks FOR SELECT 
+TO authenticated 
+USING (auth.uid() = user_id);
+
+-- Users can only insert their own tasks
+CREATE POLICY "Users can insert their own tasks" 
+ON tasks FOR INSERT 
+TO authenticated 
+WITH CHECK (auth.uid() = user_id);
+
+-- Users can only update their own tasks
+CREATE POLICY "Users can update their own tasks" 
+ON tasks FOR UPDATE 
+TO authenticated 
+USING (auth.uid() = user_id)
+WITH CHECK (auth.uid() = user_id);
+
+-- Users can only delete their own tasks
+CREATE POLICY "Users can delete their own tasks" 
+ON tasks FOR DELETE 
+TO authenticated 
+USING (auth.uid() = user_id);
+
+-- 4. Enable Realtime
+-- Ensure the publication exists and includes the tasks table
 ALTER PUBLICATION supabase_realtime ADD TABLE tasks;
 ALTER TABLE tasks REPLICA IDENTITY FULL;
 ```

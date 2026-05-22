@@ -16,6 +16,8 @@ const authContainer = document.getElementById('auth-container');
 const mainApp = document.getElementById('main-app');
 const loginForm = document.getElementById('login-form');
 const signupForm = document.getElementById('signup-form');
+const tabLogin = document.getElementById('tab-login');
+const tabSignup = document.getElementById('tab-signup');
 const logoutBtn = document.getElementById('logout-btn');
 const userEmailEl = document.getElementById('user-email');
 
@@ -65,6 +67,13 @@ function showAuth() {
         realtimeChannel.unsubscribe();
         realtimeChannel = null;
     }
+    // Reset to Login form on logout/load
+    if (tabLogin && tabSignup) {
+        tabLogin.classList.add('active');
+        tabSignup.classList.remove('active');
+        loginForm.classList.remove('hidden');
+        signupForm.classList.add('hidden');
+    }
 }
 
 // Auth Handlers
@@ -96,6 +105,23 @@ logoutBtn.addEventListener('click', async () => {
     const { error } = await supabase.auth.signOut();
     if (error) console.error('Error logging out:', error);
 });
+
+// Auth Toggle Switch Logic
+if (tabLogin && tabSignup) {
+    tabLogin.addEventListener('click', () => {
+        tabLogin.classList.add('active');
+        tabSignup.classList.remove('active');
+        loginForm.classList.remove('hidden');
+        signupForm.classList.add('hidden');
+    });
+
+    tabSignup.addEventListener('click', () => {
+        tabSignup.classList.add('active');
+        tabLogin.classList.remove('active');
+        signupForm.classList.remove('hidden');
+        loginForm.classList.add('hidden');
+    });
+}
 
 // Fetch Tasks from Supabase
 async function fetchTasks() {

@@ -77,23 +77,41 @@ body {
     color: black;
 }
 
-.auth-divider {
-    text-align: center;
+.auth-tabs {
+    display: flex;
+    border: var(--border-width) solid var(--border-color);
+}
+
+.auth-tab {
+    flex: 1;
+    padding: 15px;
+    font-family: inherit;
+    font-size: 1.1rem;
     font-weight: bold;
-    position: relative;
+    background: var(--bg-color);
+    color: var(--text-color);
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: background 0.15s ease, color 0.15s ease;
 }
 
-.auth-divider::before, .auth-divider::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    width: 40%;
-    height: 1px;
-    background: black;
+.auth-tab:first-child {
+    border-right: var(--border-width) solid var(--border-color);
 }
 
-.auth-divider::before { left: 0; }
-.auth-divider::after { right: 0; }
+.auth-tab.active {
+    background: var(--text-color);
+    color: var(--bg-color);
+}
+
+.auth-tab:hover:not(.active) {
+    background: #f0f0f0;
+}
+
+.hidden {
+    display: none !important;
+}
 
 .header-actions {
     display: flex;

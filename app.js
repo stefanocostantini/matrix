@@ -245,6 +245,7 @@ function createTaskElement(task) {
     div.dataset.id = task.id;
 
     div.innerHTML = `
+        <div class="drag-handle">≡</div>
         <div class="task-content">
             <span class="task-text">${task.title}</span>
         </div>

@@ -256,6 +256,8 @@ body {
 
 /* Task Item */
 .task-item {
+    display: flex;
+    align-items: center;
     padding: 12px 20px;
     border-radius: 12px;
     color: white;
@@ -290,6 +292,13 @@ body {
 .task-content {
     display: flex;
     align-items: center;
+    flex-grow: 1;
+}
+
+.drag-handle {
+    margin-right: 12px;
+    opacity: 0.6;
+    font-size: 1.2rem;
 }
 
 .task-content input[type="checkbox"] {
@@ -422,6 +431,10 @@ body {
 }
 
 @media (max-width: 768px) {
+    .app-container {
+        padding: 10px;
+    }
+
     .matrix-grid {
         display: flex;
         flex-direction: column;
@@ -433,7 +446,7 @@ body {
 
     .quadrant {
         border-bottom: 2px solid var(--border-color);
-        padding: 20px;
+        padding: 20px 5px;
     }
 
     .quadrant:last-child {
@@ -461,5 +474,14 @@ body {
     .urgent-not-important .task-list, 
     .not-urgent-not-important .task-list {
         margin: 0;
+    }
+
+    .task-list {
+        grid-template-columns: 1fr;
+    }
+
+    .task-item {
+        grid-column: 1 !important;
+        grid-row: auto !important;
     }
 }

@@ -1,11 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eisenhower Matrix</title>
+    <title>Matrix</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+    <link rel="manifest" href="favicon/site.webmanifest">
 </head>
+
 <body>
     <div id="auth-container" class="auth-container">
         <header>
@@ -30,54 +36,55 @@
     </div>
 
     <div id="main-app" class="app-container" style="display: none;">
-        <header>
-            <div class="header-main">
-                <div>
-                    <h1>Eisenhower Matrix</h1>
-                    <div id="user-email" class="user-email"></div>
-                </div>
-                <div class="header-actions">
-                    <div id="sync-status" class="connecting">OFFLINE</div>
-                    <button id="logout-btn" class="logout-btn">LOGOUT</button>
-                </div>
+        <div class="header-top-right">
+            <div class="status-bar">
+                <span id="sync-status" class="connecting">offline</span> | <span id="user-email"
+                    class="user-email"></span>
+                <button id="logout-btn" class="logout-btn" title="Logout">⏻</button>
             </div>
-            <form id="add-task-form">
-                <input type="text" id="task-title" placeholder="ENTER NEW TASK..." required>
-                <select id="task-quadrant">
-                    <option value="urgent_important">URGENT & IMPORTANT</option>
-                    <option value="not_urgent_important">IMPORTANT (NOT URGENT)</option>
-                    <option value="urgent_not_important">URGENT (NOT IMPORTANT)</option>
-                    <option value="not_urgent_not_important" selected>NEITHER</option>
-                </select>
-                <button type="submit">ADD TASK</button>
-            </form>
-        </header>
+        </div>
 
         <div class="matrix-container">
-            <div class="axis-label urgent">URGENT</div>
-            <div class="axis-label important">IMPORTANT</div>
-            
+            <div class="axis-label vertical-top">Urgent</div>
+            <div class="axis-label vertical-bottom">Not urgent</div>
+            <div class="axis-label horizontal-left">Important</div>
+            <div class="axis-label horizontal-right">Not important</div>
+
             <main class="matrix-grid">
                 <div class="quadrant urgent-important" data-id="urgent_important">
-                    <h2>DO NOW</h2>
+                    <h2>Do now</h2>
                     <div class="task-list"></div>
                 </div>
                 <div class="quadrant not-urgent-important" data-id="not_urgent_important">
-                    <h2>SCHEDULE</h2>
+                    <h2>Schedule</h2>
                     <div class="task-list"></div>
                 </div>
                 <div class="quadrant urgent-not-important" data-id="urgent_not_important">
-                    <h2>DELEGATE</h2>
+                    <h2>Delegate</h2>
                     <div class="task-list"></div>
                 </div>
                 <div class="quadrant not-urgent-not-important" data-id="not_urgent_not_important">
-                    <h2>ELIMINATE</h2>
+                    <h2 class="delete-header">Delete</h2>
                     <div class="task-list"></div>
                 </div>
             </main>
+        </div>
+
+        <button id="fab-add-task" class="fab">+</button>
+
+        <div id="new-task-modal" class="modal-overlay hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>New task</h2>
+                </div>
+                <form id="modal-task-form">
+                    <input type="text" id="modal-task-title" placeholder="" required autocomplete="off">
+                </form>
+            </div>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="app.js"></script>
 </body>
+
 </html>

@@ -21,9 +21,10 @@ const tabSignup = document.getElementById('tab-signup');
 const logoutBtn = document.getElementById('logout-btn');
 const userEmailEl = document.getElementById('user-email');
 
-const form = document.getElementById('add-task-form');
-const taskTitleInput = document.getElementById('task-title');
-const taskQuadrantSelect = document.getElementById('task-quadrant');
+const form = document.getElementById('modal-task-form');
+const taskTitleInput = document.getElementById('modal-task-title');
+const fabAddTask = document.getElementById('fab-add-task');
+const newTaskModal = document.getElementById('new-task-modal');
 const quadrants = document.querySelectorAll('.quadrant');
 const syncStatusEl = document.getElementById('sync-status');
 
@@ -245,15 +246,15 @@ function createTaskElement(task) {
 
     div.innerHTML = `
         <div class="task-content">
-            <input type="checkbox" ${task.completed ? 'checked' : ''}>
             <span class="task-text">${task.title}</span>
         </div>
-        <button class="delete-btn">&times;</button>
+        <button class="delete-btn">x</button>
     `;
 
     // Events
-    div.querySelector('input').addEventListener('change', async (e) => {
-        const isCompleted = e.target.checked;
+    div.addEventListener('click', async (e) => {
+        if (e.target.classList.contains('delete-btn')) return;
+        const isCompleted = !div.classList.contains('completed');
         task.completed = isCompleted;
         div.classList.toggle('completed', isCompleted);
         
@@ -293,14 +294,47 @@ function createTaskElement(task) {
     return div;
 }
 
+// Modal Logic
+function openModal() {
+    newTaskModal.classList.remove('hidden');
+    taskTitleInput.focus();
+}
+
+function closeModal() {
+    newTaskModal.classList.add('hidden');
+    taskTitleInput.value = '';
+}
+
+fabAddTask.addEventListener('click', openModal);
+
+newTaskModal.addEventListener('click', (e) => {
+    if (e.target === newTaskModal) {
+        closeModal();
+    }
+});
+
+document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+        e.preventDefault();
+        openModal();
+    } else if (e.key === 'Escape' && !newTaskModal.classList.contains('hidden')) {
+        closeModal();
+    }
+});
+
 // Add Task
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    const title = taskTitleInput.value.trim();
+    if (!title) return;
+
     const newTask = {
-        title: taskTitleInput.value.toUpperCase(),
-        quadrant: taskQuadrantSelect.value,
+        title: title,
+        quadrant: 'urgent_important',
         completed: false
     };
+    
+    closeModal();
 
     const { data, error } = await supabase
         .from('tasks')
@@ -317,8 +351,6 @@ form.addEventListener('submit', async (e) => {
             tasks.push(data[0]);
             renderTasks();
         }
-        taskTitleInput.value = '';
-        taskTitleInput.focus();
     }
 });
 

@@ -73,6 +73,8 @@ function showAuth() {
         tabSignup.classList.remove('active');
         loginForm.classList.remove('hidden');
         signupForm.classList.add('hidden');
+        loginForm.reset();
+        signupForm.reset();
     }
 }
 
@@ -109,17 +111,23 @@ logoutBtn.addEventListener('click', async () => {
 // Auth Toggle Switch Logic
 if (tabLogin && tabSignup) {
     tabLogin.addEventListener('click', () => {
+        if (tabLogin.classList.contains('active')) return;
         tabLogin.classList.add('active');
         tabSignup.classList.remove('active');
         loginForm.classList.remove('hidden');
         signupForm.classList.add('hidden');
+        loginForm.reset();
+        signupForm.reset();
     });
 
     tabSignup.addEventListener('click', () => {
+        if (tabSignup.classList.contains('active')) return;
         tabSignup.classList.add('active');
         tabLogin.classList.remove('active');
         signupForm.classList.remove('hidden');
         loginForm.classList.add('hidden');
+        loginForm.reset();
+        signupForm.reset();
     });
 }
 

@@ -129,6 +129,7 @@ async function fetchTasks() {
     const { data, error } = await supabase
         .from('tasks')
         .select('*')
+        .eq('user_id', currentUser.id)
         .order('id', { ascending: true });
 
     if (error) {
@@ -153,6 +154,7 @@ function setupRealtimeSubscription() {
                 event: '*',
                 schema: 'public',
                 table: 'tasks',
+                filter: `user_id=eq.${currentUser.id}`,
             },
             (payload) => {
                 console.log('Realtime update received:', payload.eventType);

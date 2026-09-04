@@ -194,7 +194,13 @@ body {
 
 /* Position Headers based on mockup */
 .urgent-important h2 {
-    /* Top Left */
+    position: absolute;
+    top: 40px;
+    left: 40px;
+}
+
+.urgent-important .task-list {
+    margin-top: 50px;
 }
 
 .not-urgent-important h2 {
@@ -462,6 +468,7 @@ body {
         right: 10px;
     }
     
+    .urgent-important h2, 
     .not-urgent-important h2, 
     .urgent-not-important h2, 
     .not-urgent-not-important h2 {
@@ -470,6 +477,7 @@ body {
         margin-bottom: 20px;
     }
     
+    .urgent-important .task-list, 
     .not-urgent-important .task-list, 
     .urgent-not-important .task-list, 
     .not-urgent-not-important .task-list {
